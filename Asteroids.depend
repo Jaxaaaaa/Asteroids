@@ -1,0 +1,21 @@
+# depslib dependency file v1.0
+1791398537 source:d:\mes documents\bureau\esp32\nouveau dossier\main.c
+	"raylib.h"
+	"config.h"
+	"ship.h"
+
+1790697226 d:\mes documents\téléchargements\raylib-6.0_win64_mingw-w64\raylib-6.0_win64_mingw-w64\include\raylib.h
+	<stdarg.h>
+	<stdbool.h>
+
+1791397692 source:d:\mes documents\bureau\esp32\nouveau dossier\ship.c
+	"raylib.h"
+	<math.h>
+	"config.h"
+	"ship.h"
+
+1791393445 d:\mes documents\bureau\esp32\nouveau dossier\config.h
+	"raylib.h"
+
+1791396617 d:\mes documents\bureau\esp32\nouveau dossier\ship.h
+
