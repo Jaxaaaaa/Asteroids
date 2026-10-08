@@ -11,6 +11,8 @@ typedef struct{
     float acceleration;
     float rotation_speed;
     float slow_down_ratio;
+    int fire_cooldown;
+    int fire_delay;
 } Ship;
 
 void init_ship(Ship *ship);

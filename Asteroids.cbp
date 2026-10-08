@@ -38,10 +38,18 @@
 			<Add option="-Wl,--defsym,stat64i32=_stat64" />
 			<Add directory="D:/Mes documents/Téléchargements/raylib-6.0_win64_mingw-w64/raylib-6.0_win64_mingw-w64/lib" />
 		</Linker>
+		<Unit filename="asteroid.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="asteroid.h" />
 		<Unit filename="config.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="missiles.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="missiles.h" />
 		<Unit filename="ship.c">
 			<Option compilerVar="CC" />
 		</Unit>

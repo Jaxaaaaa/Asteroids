@@ -3,17 +3,6 @@
 #include "config.h"
 #include "ship.h"
 
-//Calculer les coordonnées de départ du ship
-//A chaque image --------------------------
-//Pouvoir tourner le vaisseau avec q et d
-//Appuyer sur z augmente la vitesse selon le view angle du vaisseau, s la réduit
-//la position du vaisseau s'actualise selon la vitesse, meme si aucun appuis est détecté
-//si le vaisseau sort par un bord, il réapparait au bord opposé
-//afficher le vaisseau selon ses nouvelles coordonnées
-// calcul de la vitesse selon l'angle de vue :---------
-//speed_x += acceleration * cos(view_angle * DEG2RAD);
-//speed_y += acceleration * sin(view_angle * DEG2RAD);
-
 void init_ship(Ship* ship){
     ship->coord_x = (SCREEN_WIDTH/2);
     ship->coord_y = (SCREEN_HEIGHT/2);
@@ -24,6 +13,8 @@ void init_ship(Ship* ship){
     ship->speed_y = 0;
     ship->rotation_speed = 4;
     ship->slow_down_ratio = 0.95;
+    ship->fire_cooldown = 0;
+    ship->fire_delay = FIRE_DELAY;
 }
 
 void update_ship(Ship* ship){
@@ -54,6 +45,9 @@ void update_ship(Ship* ship){
     }
     if((ship->coord_y + ship->radius) < 0){ //sortie du vaisseau par le haut
         ship->coord_y = SCREEN_HEIGHT + ship->radius;
+    }
+    if(ship->fire_cooldown > 0){
+        ship->fire_cooldown--;
     }
 }
 

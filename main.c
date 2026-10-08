@@ -22,20 +22,21 @@ int main()
     }
     while(!WindowShouldClose()){
         update_ship(&ship);
-        if(IsKeyPressed(KEY_SPACE)){
+        if(IsKeyDown(KEY_SPACE) && ship.fire_cooldown <= 0){
            for(int i = 0; i<MAX_MISSILE; i++){
                 if(!missiles[i].alive){
                     init_missile(&missiles[i], ship);
+                    ship.fire_cooldown = ship.fire_delay; //reset le cooldown des tirs après un tir
                     break;
                 }
            }
         }
-        for(int i = 0; i < MAX_ASTEROIDS; i++){
+        for(int i = 0; i < MAX_ASTEROIDS; i++){ //update les astéroides encore présents
             if(asteroid[i].alive == true){
                 update_asteroid(&asteroid[i]);
             }
         }
-        for(int i = 0; i < MAX_MISSILE; i++){
+        for(int i = 0; i < MAX_MISSILE; i++){ //update les missiles encore présents
             if(missiles[i].alive){
                 update_missile(&missiles[i]);
             }
