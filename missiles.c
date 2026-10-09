@@ -20,16 +20,16 @@ void update_missile(Missile *missile){
     missile->coord_x += missile->speed_x;
     missile->coord_y += missile->speed_y;
     if((missile->coord_x - missile->radius) > SCREEN_WIDTH){ //sortie du missile par la droite
-        missile->coord_x = 0 - missile->radius;
+        missile->alive = false;
     }
     if((missile->coord_x + missile->radius) < 0){ //sortie du missile par la gauche
-        missile->coord_x = SCREEN_WIDTH + missile->radius;
+        missile->alive = false;
     }
     if((missile->coord_y - missile->radius) > SCREEN_HEIGHT){ //sortie du missile par le bas
-        missile->coord_y = 0 - missile->radius;
+        missile->alive = false;
     }
     if((missile->coord_y + missile->radius) < 0){ //sortie du missile par le haut
-        missile->coord_y = SCREEN_HEIGHT + missile->radius;
+        missile->alive = false;
     }
     missile->life_time--;
     if(missile->life_time <=0){

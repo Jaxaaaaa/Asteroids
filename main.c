@@ -3,6 +3,7 @@
 #include "ship.h"
 #include "asteroid.h"
 #include "missiles.h"
+#include "collisions.h"
 int main()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Asteroids");
@@ -39,6 +40,19 @@ int main()
         for(int i = 0; i < MAX_MISSILE; i++){ //update les missiles encore présents
             if(missiles[i].alive){
                 update_missile(&missiles[i]);
+            }
+        }
+        for(int i = 0; i < MAX_MISSILE; i++){
+            if(missiles[i].alive){
+                for(int j = 0; j < MAX_ASTEROIDS; j++){
+                    if(asteroid[j].alive){
+                        if(circles_collide(missiles[i].coord_x, missiles[i].coord_y, missiles[i].radius, asteroid[j].coord_x, asteroid[j].coord_y, asteroid[j].radius)){
+                            asteroid[j].alive = false;
+                            missiles[i].alive = false;
+                            break;
+                        }
+                    }
+                }
             }
         }
         BeginDrawing();

@@ -11,7 +11,7 @@ void init_ship(Ship* ship){
     ship->acceleration = 0.1;
     ship->speed_x = 0;
     ship->speed_y = 0;
-    ship->rotation_speed = 4;
+    ship->rotation_speed = 6;
     ship->slow_down_ratio = 0.95;
     ship->fire_cooldown = 0;
     ship->fire_delay = FIRE_DELAY;
