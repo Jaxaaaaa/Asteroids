@@ -14,6 +14,8 @@ typedef struct{
     int fire_cooldown;
     int fire_delay;
     int flash_timer;
+    int lives;
+    int invincible_timer;
 } Ship;
 
 void init_ship(Ship *ship);

@@ -16,6 +16,8 @@ void init_ship(Ship* ship){
     ship->fire_cooldown = 0;
     ship->fire_delay = FIRE_DELAY;
     ship->flash_timer = 0;
+    ship->lives = SHIP_LIVES;
+    ship->invincible_timer = 0;
 }
 
 void update_ship(Ship* ship, Sound thrust){
@@ -66,6 +68,9 @@ void update_ship(Ship* ship, Sound thrust){
     if(ship->flash_timer > 0){
         ship->flash_timer--;
     }
+    if(ship->invincible_timer > 0){
+        ship->invincible_timer--;
+    }
 }
 
 void draw_ship(Ship ship){
@@ -77,12 +82,14 @@ void draw_ship(Ship ship){
                           ship.coord_y + sin(a-spread) * ship.radius};
     Vector2 angle_right = {ship.coord_x + cos(a+spread) * ship.radius,
                            ship.coord_y + sin(a+spread) * ship.radius};
-    DrawTriangleLines(nose, angle_left, angle_right, WHITE);
+    if(ship.invincible_timer == 0 || (ship.invincible_timer/5)% 2 == 0){ //dessine le vaisseau si il n'est pas invincible ou si le timer d'invicibilité est pair
+        DrawTriangleLines(nose, angle_left, angle_right, WHITE);
+    }
     if(ship.flash_timer >0){
         float ratio = ship.flash_timer/(float)FLASH_DURATION;
         BeginBlendMode(BLEND_ADDITIVE);
         DrawCircleV(nose, 8*ratio, Fade(ORANGE, 0.6f*ratio));
-        DrawCircleV(nose, 4*ratio, Fade(WHITE, 06.f*ratio));
+        DrawCircleV(nose, 4*ratio, Fade(WHITE, 0.6f*ratio));
         EndBlendMode();
     }
 }

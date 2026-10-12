@@ -78,6 +78,16 @@ int main()
                 }
             }
         }
+        for(int i = 0; i < MAX_ASTEROIDS; i++){
+            if(ship.invincible_timer == 0 && asteroid[i].alive && circles_collide(ship.coord_x, ship.coord_y, ship.radius, asteroid[i].coord_x, asteroid[i].coord_y, asteroid[i].radius)){
+                ship.lives--;
+                ship.speed_x = 0;
+                ship.speed_y = 0;
+                ship.invincible_timer = INVINCIBLE_DURATION;
+                shake = SHAKE_STRENGTH;
+                break;
+            }
+        }
         camera.offset.x = (GetRandomValue(-100, 100) / 100.0f) * shake;
         camera.offset.y = (GetRandomValue(-100, 100) / 100.0f) * shake;
         shake *= 0.9;
@@ -101,6 +111,7 @@ int main()
         draw_ship(ship);
         EndMode2D();
         DrawText(TextFormat("Vitesse : %.2f", sqrt(ship.speed_x * ship.speed_x + ship.speed_y * ship.speed_y)), 10, 10, 20, WHITE);
+        DrawText(TextFormat("Vies : %d", ship.lives), 10, 30, 20, WHITE);
         EndDrawing();
     }
     UnloadSound(thrust);

@@ -12,5 +12,7 @@
 #define FLASH_DURATION 3
 #define SHAKE_STRENGTH 5
 #define MAX_SPEED 6
+#define SHIP_LIVES 3
+#define INVINCIBLE_DURATION 120
 #include "raylib.h"
 #endif // CONFIG_H_INCLUDED
