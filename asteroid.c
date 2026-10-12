@@ -3,10 +3,13 @@
 #include "config.h"
 #include "asteroid.h"
 
-void init_asteroid(Asteroid *asteroid, float x, float y, float radius){
+const float radius_array[3] = { 40, 20, 10};
+
+void init_asteroid(Asteroid *asteroid, float x, float y, AsteroidSize size){
     asteroid->coord_x = x;
     asteroid->coord_y = y;
-    asteroid->radius = radius;
+    asteroid->size = size;
+    asteroid->radius = radius_array[asteroid->size];
     float speed = GetRandomValue(ASTEROID_MIN_SPEED, ASTEROID_MAX_SPEED)/10.0f;
     int angle = GetRandomValue(0, 359);
     asteroid->speed_x = speed *  cos(angle*DEG2RAD);

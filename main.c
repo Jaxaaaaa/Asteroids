@@ -23,7 +23,7 @@ int main()
         asteroid[i].alive = false;
     }
     for(int i = 0; i< 5; i++){
-        init_asteroid(&asteroid[i], GetRandomValue(0,SCREEN_WIDTH), GetRandomValue(0, SCREEN_HEIGHT), 40);
+        init_asteroid(&asteroid[i], GetRandomValue(0,SCREEN_WIDTH), GetRandomValue(0, SCREEN_HEIGHT), BIG);
     }
     for(int i = 0; i<MAX_MISSILE; i++){ //initialise les missiles alive à false
         missiles[i].alive = false;
@@ -57,9 +57,21 @@ int main()
                 for(int j = 0; j < MAX_ASTEROIDS; j++){
                     if(asteroid[j].alive){
                         if(circles_collide(missiles[i].coord_x, missiles[i].coord_y, missiles[i].radius, asteroid[j].coord_x, asteroid[j].coord_y, asteroid[j].radius)){
+                            float last_x = asteroid[j].coord_x;
+                            float last_y = asteroid[j].coord_y;
+                            AsteroidSize last_size = asteroid[j].size;
                             shake = SHAKE_STRENGTH;
-                            asteroid[j].alive = false;
                             missiles[i].alive = false;
+                            asteroid[j].alive = false;
+                            int created = 0;
+                            if(last_size != SMALL){
+                                for(int k = 0; created < 2 && k < MAX_ASTEROIDS; k++){
+                                    if(asteroid[k].alive == false){
+                                        init_asteroid(&asteroid[k], last_x, last_y, last_size +1);
+                                        created++;
+                                    }
+                                }
+                            }
                             break;
                         }
                     }
@@ -76,7 +88,6 @@ int main()
         BeginDrawing();
         BeginMode2D(camera);
         ClearBackground(BLACK);
-        DrawText(TextFormat("Vitesse : %.2f", sqrt(ship.speed_x * ship.speed_x + ship.speed_y * ship.speed_y)), 10, 10, 20, WHITE);
         for(int i = 0; i < MAX_ASTEROIDS; i++){
             if(asteroid[i].alive == true){
                 draw_asteroid(asteroid[i]);
@@ -89,8 +100,10 @@ int main()
         }
         draw_ship(ship);
         EndMode2D();
+        DrawText(TextFormat("Vitesse : %.2f", sqrt(ship.speed_x * ship.speed_x + ship.speed_y * ship.speed_y)), 10, 10, 20, WHITE);
         EndDrawing();
     }
+    UnloadSound(thrust);
     UnloadSound(laser);
     CloseAudioDevice();
     CloseWindow();
