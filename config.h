@@ -9,5 +9,8 @@
 #define MISSILE_LIFE_TIME (MISSILE_RANGE / MISSILE_SPEED)
 #define MISSILE_RADIUS 2
 #define FIRE_DELAY 6
+#define FLASH_DURATION 3
+#define SHAKE_STRENGTH 5
+#define MAX_SPEED 6
 #include "raylib.h"
 #endif // CONFIG_H_INCLUDED

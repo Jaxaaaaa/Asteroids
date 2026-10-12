@@ -15,9 +15,10 @@ void init_ship(Ship* ship){
     ship->slow_down_ratio = 0.95;
     ship->fire_cooldown = 0;
     ship->fire_delay = FIRE_DELAY;
+    ship->flash_timer = 0;
 }
 
-void update_ship(Ship* ship){
+void update_ship(Ship* ship, Sound thrust){
     if(IsKeyDown(KEY_A)){ //tourne le vaisseau vers la gauche
         ship->view_angle -= ship->rotation_speed;
     }
@@ -29,8 +30,21 @@ void update_ship(Ship* ship){
         ship->speed_y *= ship->slow_down_ratio;
     }
     if(IsKeyDown(KEY_W)){ //accélère le vaisseau selon la vitesse dans laquelle il regarde
-        ship->speed_x += ship-> acceleration * cos(ship->view_angle * DEG2RAD);
+        ship->speed_x += ship->acceleration * cos(ship->view_angle * DEG2RAD);
         ship->speed_y += ship->acceleration * sin(ship->view_angle * DEG2RAD);
+        float speed = sqrt(ship->speed_x * ship->speed_x +ship->speed_y * ship->speed_y); //calcul de la vitesse réelle
+        if(speed > MAX_SPEED){ //remise à la vitesse max en cas de dépassement
+            float ratio = MAX_SPEED / speed;
+            ship->speed_x *= ratio;
+            ship->speed_y *= ratio;
+
+        }
+        if(!IsSoundPlaying(thrust)){
+            PlaySound(thrust);
+        }
+    }
+    else{
+        StopSound(thrust);
     }
     ship->coord_x += ship->speed_x;
     ship->coord_y += ship->speed_y;
@@ -49,6 +63,9 @@ void update_ship(Ship* ship){
     if(ship->fire_cooldown > 0){
         ship->fire_cooldown--;
     }
+    if(ship->flash_timer > 0){
+        ship->flash_timer--;
+    }
 }
 
 void draw_ship(Ship ship){
@@ -61,4 +78,11 @@ void draw_ship(Ship ship){
     Vector2 angle_right = {ship.coord_x + cos(a+spread) * ship.radius,
                            ship.coord_y + sin(a+spread) * ship.radius};
     DrawTriangleLines(nose, angle_left, angle_right, WHITE);
+    if(ship.flash_timer >0){
+        float ratio = ship.flash_timer/(float)FLASH_DURATION;
+        BeginBlendMode(BLEND_ADDITIVE);
+        DrawCircleV(nose, 8*ratio, Fade(ORANGE, 0.6f*ratio));
+        DrawCircleV(nose, 4*ratio, Fade(WHITE, 06.f*ratio));
+        EndBlendMode();
+    }
 }

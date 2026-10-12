@@ -4,10 +4,17 @@
 #include "asteroid.h"
 #include "missiles.h"
 #include "collisions.h"
+#include <raymath.h>
 int main()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Asteroids");
+    InitAudioDevice();
+    Sound laser = LoadSound("laserShoot.wav");
+    Sound thrust = LoadSound("thrusterFire_000.ogg");
     SetTargetFPS(60);
+    Camera2D camera = { 0 };
+    camera.zoom = 1.0f;
+    float shake = 0;
     Ship ship;
     Asteroid asteroid[MAX_ASTEROIDS];
     Missile missiles[MAX_MISSILE];
@@ -22,11 +29,14 @@ int main()
         missiles[i].alive = false;
     }
     while(!WindowShouldClose()){
-        update_ship(&ship);
-        if(IsKeyDown(KEY_SPACE) && ship.fire_cooldown <= 0){
+        update_ship(&ship, thrust);
+        if(IsKeyDown(KEY_SPACE) && ship.fire_cooldown <= 0){ //tirs
            for(int i = 0; i<MAX_MISSILE; i++){
                 if(!missiles[i].alive){
                     init_missile(&missiles[i], ship);
+                    SetSoundPitch(laser, GetRandomValue(90, 110) /100.0f);
+                    PlaySound(laser);
+                    ship.flash_timer = FLASH_DURATION;
                     ship.fire_cooldown = ship.fire_delay; //reset le cooldown des tirs après un tir
                     break;
                 }
@@ -47,6 +57,7 @@ int main()
                 for(int j = 0; j < MAX_ASTEROIDS; j++){
                     if(asteroid[j].alive){
                         if(circles_collide(missiles[i].coord_x, missiles[i].coord_y, missiles[i].radius, asteroid[j].coord_x, asteroid[j].coord_y, asteroid[j].radius)){
+                            shake = SHAKE_STRENGTH;
                             asteroid[j].alive = false;
                             missiles[i].alive = false;
                             break;
@@ -55,8 +66,17 @@ int main()
                 }
             }
         }
+        camera.offset.x = (GetRandomValue(-100, 100) / 100.0f) * shake;
+        camera.offset.y = (GetRandomValue(-100, 100) / 100.0f) * shake;
+        shake *= 0.9;
+        if(shake < 0.1){
+            shake = 0;
+        }
+
         BeginDrawing();
+        BeginMode2D(camera);
         ClearBackground(BLACK);
+        DrawText(TextFormat("Vitesse : %.2f", sqrt(ship.speed_x * ship.speed_x + ship.speed_y * ship.speed_y)), 10, 10, 20, WHITE);
         for(int i = 0; i < MAX_ASTEROIDS; i++){
             if(asteroid[i].alive == true){
                 draw_asteroid(asteroid[i]);
@@ -68,8 +88,11 @@ int main()
             }
         }
         draw_ship(ship);
+        EndMode2D();
         EndDrawing();
     }
+    UnloadSound(laser);
+    CloseAudioDevice();
     CloseWindow();
     return 0;
 }

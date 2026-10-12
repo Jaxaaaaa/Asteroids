@@ -13,10 +13,11 @@ typedef struct{
     float slow_down_ratio;
     int fire_cooldown;
     int fire_delay;
+    int flash_timer;
 } Ship;
 
 void init_ship(Ship *ship);
-void update_ship(Ship *ship);
+void update_ship(Ship *ship, Sound thrust);
 void draw_ship(Ship ship);
 
 #endif // SHIP_H_INCLUDED
