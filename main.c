@@ -5,6 +5,8 @@
 #include "missiles.h"
 #include "collisions.h"
 #include <raymath.h>
+
+coonst int score_table[3] = {1, 2, 3};
 int main()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Asteroids");
@@ -19,6 +21,7 @@ int main()
     Asteroid asteroid[MAX_ASTEROIDS];
     Missile missiles[MAX_MISSILE];
     init_ship(&ship);
+    int score = 0;
     for(int i = 0; i<MAX_ASTEROIDS; i++){ //initialisation du tableau d'asteroid à alive false
         asteroid[i].alive = false;
     }
@@ -61,6 +64,7 @@ int main()
                             float last_y = asteroid[j].coord_y;
                             AsteroidSize last_size = asteroid[j].size;
                             shake = SHAKE_STRENGTH;
+                            score += score_table[last_size];
                             missiles[i].alive = false;
                             asteroid[j].alive = false;
                             int created = 0;
@@ -112,6 +116,7 @@ int main()
         EndMode2D();
         DrawText(TextFormat("Vitesse : %.2f", sqrt(ship.speed_x * ship.speed_x + ship.speed_y * ship.speed_y)), 10, 10, 20, WHITE);
         DrawText(TextFormat("Vies : %d", ship.lives), 10, 30, 20, WHITE);
+        DrawText(TextFormat("Score : %d", score), 10, 50, 20, WHITE);
         EndDrawing();
     }
     UnloadSound(thrust);
