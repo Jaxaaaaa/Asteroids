@@ -22,5 +22,7 @@ typedef struct{
 void init_asteroid(Asteroid *asteroid, float x, float y, AsteroidSize size);
 void update_asteroid(Asteroid *asteroid);
 void draw_asteroid(Asteroid asteroid);
+void spawn_wave(Asteroid asteroid[], int number);
+bool any_asteroid_alive(Asteroid asteroid[]);
 
 #endif // ASTEROID_H_INCLUDED

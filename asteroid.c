@@ -33,6 +33,23 @@ void update_asteroid(Asteroid *asteroid){
         asteroid->coord_y = SCREEN_HEIGHT + asteroid->radius;
     }
 }
+void spawn_wave(Asteroid asteroid[], int number){
+    for(int i = 0; i<MAX_ASTEROIDS; i++){
+        asteroid[i].alive = false;
+    }
+    for(int i = 0; i< number && i<MAX_ASTEROIDS; i++){
+        init_asteroid(&asteroid[i], GetRandomValue(0,SCREEN_WIDTH), GetRandomValue(0, SCREEN_HEIGHT), BIG);
+    }
+}
+
+bool any_asteroid_alive(Asteroid asteroid[]){
+    for(int i = 0; i <MAX_ASTEROIDS; i++){
+        if(asteroid[i].alive){
+            return true;
+        }
+    }
+    return false;
+}
 
 void draw_asteroid(Asteroid asteroid){
     DrawCircleLines((int)asteroid.coord_x, (int)asteroid.coord_y, asteroid.radius, WHITE);

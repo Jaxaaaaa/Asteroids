@@ -9,5 +9,5 @@ typedef enum{
     STATE_GAME_OVER,
 } State;
 
-void reset_game(Ship *ship, Missile missiles[], Asteroid asteroid[], int *score);
+void reset_game(Ship *ship, Missile missiles[], Asteroid asteroid[], int *score, int *wave);
 #endif // GAME_H_INCLUDED

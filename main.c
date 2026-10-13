@@ -20,28 +20,29 @@ int main()
     Ship ship;
     Asteroid asteroid[MAX_ASTEROIDS];
     Missile missiles[MAX_MISSILE];
-    init_ship(&ship);
     State state = STATE_TITLE;
     int score = 0;
-    for(int i = 0; i<MAX_ASTEROIDS; i++){ //initialisation du tableau d'asteroid à alive false
-        asteroid[i].alive = false;
-    }
-    for(int i = 0; i<MAX_MISSILE; i++){ //initialise les missiles alive à false
-        missiles[i].alive = false;
-    }
+    int wave = 1;
     while(!WindowShouldClose()){
         switch (state){
             case STATE_TITLE: // ecran d'accueil
                 BeginDrawing();
+                ClearBackground(BLACK);
                 int title_text_lengh = MeasureText(TextFormat("Pour commencer la partie, appuyez sur Entree"), 20);
                 DrawText(TextFormat("Pour commencer la partie, appuyez sur Entree"), (SCREEN_WIDTH/2)- (title_text_lengh/2), (SCREEN_HEIGHT/2)-10, 20, WHITE);
                 EndDrawing();
                 if(IsKeyDown(KEY_ENTER)){
-                    reset_game(&ship, missiles, asteroid, &score);
+                    reset_game(&ship, missiles, asteroid, &score, &wave);
                     state = STATE_PLAYING;
                 }
                 break;
             case STATE_PLAYING: //partie en cours
+                if (!any_asteroid_alive(asteroid)){
+                    wave++;
+                    int count = START_ASTEROIDS +(wave-1) * WAVE_INCREMENT;
+                    spawn_wave(asteroid, count);
+                    ship.invincible_timer = INVINCIBLE_DURATION;
+                }
                 update_ship(&ship, thrust);
                 if(IsKeyDown(KEY_SPACE) && ship.fire_cooldown <= 0){ //tirs
                    for(int i = 0; i<MAX_MISSILE; i++){
@@ -128,26 +129,24 @@ int main()
                 EndMode2D();
                 DrawText(TextFormat("Vitesse : %.2f", sqrt(ship.speed_x * ship.speed_x + ship.speed_y * ship.speed_y)), 10, 10, 20, WHITE);
                 DrawText(TextFormat("Vies : %d", ship.lives), 10, 30, 20, WHITE);
-                DrawText(TextFormat("Score : %d", score), 10, 50, 20, WHITE);
+                DrawText(TextFormat("Vague : %d", wave), 10, 50, 20, WHITE);
+                DrawText(TextFormat("Score : %d", score), 10, 70, 20, WHITE);
                 EndDrawing();
                         break;
-                    case STATE_GAME_OVER:
-                        int end_text_lengh_3 = MeasureText(TextFormat("Pour recommencer, appuyez sur Entree"), 20);
-                        BeginDrawing();
-                        ClearBackground(BLACK);
-                        DrawText(TextFormat("Perdu !"), (SCREEN_WIDTH/2)- (end_text_lengh_3/2), (SCREEN_HEIGHT/2)-10, 20, WHITE);
-                        DrawText(TextFormat("Score : %d", score), (SCREEN_WIDTH/2)- (end_text_lengh_3/2), (SCREEN_HEIGHT/2)+10, 20, WHITE);
-                        DrawText(TextFormat("Pour recommencer, appuyez sur Entree"), (SCREEN_WIDTH/2)- (end_text_lengh_3/2), (SCREEN_HEIGHT/2)+30, 20, WHITE);
-                        EndDrawing();
-                        if(IsKeyDown(KEY_ENTER)){
-                            reset_game(&ship, missiles, asteroid, &score);
-                            state = STATE_PLAYING;
-                        }
+                case STATE_GAME_OVER: //Perdu
+                    int end_text_lengh_3 = MeasureText(TextFormat("Pour recommencer, appuyez sur Entree"), 20);
+                    BeginDrawing();
+                    ClearBackground(BLACK);
+                    DrawText(TextFormat("Perdu !"), (SCREEN_WIDTH/2)- (end_text_lengh_3/2), (SCREEN_HEIGHT/2)-10, 20, WHITE);
+                    DrawText(TextFormat("Score : %d", score), (SCREEN_WIDTH/2)- (end_text_lengh_3/2), (SCREEN_HEIGHT/2)+10, 20, WHITE);
+                    DrawText(TextFormat("Pour recommencer, appuyez sur Entree"), (SCREEN_WIDTH/2)- (end_text_lengh_3/2), (SCREEN_HEIGHT/2)+30, 20, WHITE);
+                    EndDrawing();
+                    if(IsKeyDown(KEY_ENTER)){
+                        reset_game(&ship, missiles, asteroid, &score, &wave);
+                        state = STATE_PLAYING;
+                    }
                 }
-
             }
-
-
     UnloadSound(thrust);
     UnloadSound(laser);
     CloseAudioDevice();

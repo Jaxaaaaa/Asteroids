@@ -14,5 +14,7 @@
 #define MAX_SPEED 6
 #define SHIP_LIVES 3
 #define INVINCIBLE_DURATION 120
+#define START_ASTEROIDS 4
+#define WAVE_INCREMENT 2
 #include "raylib.h"
 #endif // CONFIG_H_INCLUDED
